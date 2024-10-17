@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Don't Give Up The Ship - Ship Calculator</title>
+    <style>
+      body {
+          background-color: #222;
+          color: #dfd;
+      }
+
+      .gun-container {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr) auto;
+          max-width: 600px;
+      }
+    </style>
+    <script src="dguts-guns.js"></script>
+    <script src="dguts-stats.js"></script>
+    <script src="../saveAs.js"></script>
+    <script>
+      function downloadShip() {
+          const shipName = document.getElementById("ship-name").value;
+
+          const filename = shipName.length > 0
+                ? shipName.toLowerCase().replace(/[ \t\n]/g, "-")
+                : Date.now();
+
+          saveAs(`${filename}.json`, {
+              crewFactor,
+              crewFactorValue,
+              sailFactorValue,
+              tenPercentLosses,
+              tonnage,
+              shipClass,
+              portGuns,
+              starboardGuns,
+              sternGuns,
+              bowGuns,
+          })
+      }
+    </script>
+  </head>
+  <body>
+    <!-- Hand-hacked html, just the way TBL intended! -->
+    <h1>Don't Give Up The Ship - Ship Calculator</h1>
+
+    <button onclick="downloadShip()">
+      Download Ship (JSON)
+    </button>
+
+    <h2>Basic Stats</h2>
+
+    <label for="ship-name">Ship Name:</label>
+    <input
+      id="ship-name"
+      name="ship-name"
+      type="text">
+    <br>
+
+    <label for="tonnage">Tonnage:</label>
+    <input
+      id="tonnage"
+      name="tonnage"
+      type="number"
+      value="100"
+      onchange="doUpdateTonnage()"
+      >
+    <br>
+
+    <label for="crew">Crew:</label>
+    <input
+      id="crew"
+      name="crew"
+      type="number"
+      value="0"
+      onchange="doUpdateCrew()"
+      >
+
+    <ul>
+      <li>
+        <strong>Ship Class:</strong>
+        <span id="ship-class">Class I</span>
+      </li>
+      <li>
+        <strong>Sail Factor Value:</strong>
+        <span id="sail-factor-value">0</span>
+      </li>
+      <li>
+        <strong>Crew Factor:</strong>
+        <span id="crew-factor">0</span>
+      </li>
+      <li>
+        <strong>CFV:</strong>
+        <span id="crew-factor-value">0</span>
+      </li>
+      <li>
+        <strong>10% losses at low damage:</strong>
+        <span id="ten-percent">0</span>
+      </li>
+      <li>
+        <strong>70% damage:</strong>
+        <span id="seventy-percent">0</span>
+      </li>
+      <li>
+        <strong>80% damage:</strong>
+        <span id="eighty-percent">0</span>
+      </li>
+      <li>
+        <strong>90% damage:</strong>
+        <span id="ninety-percent">0</span>
+      </li>
+    </ul>
+
+    <h2>Guns</h2>
+
+    Total guns: <span id="total-guns">0</span>
+    <br>
+
+    <select name="guns" id="guns">
+      <optgroup label="Carronades">
+        <option value="68c">68#C</option>
+        <option value="42c">42#C</option>
+        <option value="36c">36#C</option>
+        <option value="32c">32#C</option>
+        <option value="24c">24#C</option>
+        <option value="18c">18#C</option>
+        <option value="12c">12#C</option>
+        <option value="06c">6#C</option>
+      </optgroup>
+      <optgroup label="Long Guns">
+        <option value="42l">42#</option>
+        <option value="36l">36#</option>
+        <option value="32l">32#</option>
+        <option value="24l">24#</option>
+        <option value="18l">18#</option>
+        <option value="12l">12#</option>
+        <option value="09l">9#</option>
+        <option value="08l">8#</option>
+        <option value="06l">6#</option>
+        <option value="04l">4#</option>
+        <option value="03l">3#</option>
+      </optgroup>
+    </select>
+
+    <input id="num-guns" type="number" value="1">
+
+    <br>
+
+    <button onclick="doAddPortGun()">
+      Add Port
+    </button>
+
+    <button onclick="doAddStarboardGun()">
+      Add Starboard
+    </button>
+
+    <button onclick="doAddBoth()">
+      Add Both
+    </button>
+
+    <button onclick="doAddHalf()">
+      Add Half to Each
+    </button>
+
+    <br>
+
+    <button onclick="doAddBowGun()">
+      Add Bow (FC) Gun
+    </button>
+
+    <button onclick="doAddSternGun()">
+      Add Stern (QD) Gun
+    </button>
+
+    <button onclick="doClearGuns()">
+      Clear Guns
+    </button>
+
+    <h3>Port Guns</h3>
+
+    <div id="port-guns" class="gun-container">
+      None.
+    </div>
+
+    <h3>Starboard Guns</h3>
+
+    <div id="starboard-guns" class="gun-container">
+      None.
+    </div>
+
+    <h3>Bow Guns (Forecastle)</h3>
+
+    <div id="bow-guns" class="gun-container">
+      None.
+    </div>
+
+    <h3>Stern Guns (Quarterdeck or Roundhouse)</h3>
+
+    <div id="stern-guns" class="gun-container">
+      None.
+    </div>
+
+  </body>
+</html>
